@@ -1,0 +1,128 @@
+{
+  "id": "prod-002",
+  "name": "Ergonomic Office Chair",
+  "description": "Premium ergonomic office chair with adjustable lumbar support and breathable mesh back.",
+  "categoryId": "chairs",
+  "categoryName": "Chairs",
+  "sku": "CHAIR-ERG-001",
+  "vendor": "ErgoTech Solutions",
+  "supplier": "Office Supplies Inc",
+  "hasVariants": true,
+  "priceRange": {
+    "min": 299.99,
+    "max": 449.99
+  },
+  "variants": [
+    {
+      "variantId": "var-001",
+      "sku": "CHAIR-ERG-001-BLK-S",
+      "barcode": "2345678901234",
+      "name": "Black / Small",
+      "attributes": [
+        {
+          "name": "Color",
+          "value": "Black"
+        },
+        {
+          "name": "Size",
+          "value": "Small"
+        }
+      ],
+      "price": 299.99,
+      "compareAtPrice": 349.99,
+      "costPrice": 150.0,
+      "image": "https://stfurnituredev.blob.core.windows.net/product-images/chair-001-blk-s.jpg",
+      "inventory": {
+        "quantity": 20,
+        "tracked": true,
+        "allowBackorder": false
+      },
+      "isActive": true
+    },
+    {
+      "variantId": "var-002",
+      "sku": "CHAIR-ERG-001-BLK-M",
+      "barcode": "2345678901235",
+      "name": "Black / Medium",
+      "attributes": [
+        {
+          "name": "Color",
+          "value": "Black"
+        },
+        {
+          "name": "Size",
+          "value": "Medium"
+        }
+      ],
+      "price": 349.99,
+      "compareAtPrice": 399.99,
+      "costPrice": 175.0,
+      "image": "https://stfurnituredev.blob.core.windows.net/product-images/chair-001-blk-m.jpg",
+      "inventory": {
+        "quantity": 35,
+        "tracked": true,
+        "allowBackorder": false
+      },
+      "isActive": true
+    },
+    {
+      "variantId": "var-003",
+      "sku": "CHAIR-ERG-001-WHT-M",
+      "barcode": "2345678901236",
+      "name": "White / Medium",
+      "attributes": [
+        {
+          "name": "Color",
+          "value": "White"
+        },
+        {
+          "name": "Size",
+          "value": "Medium"
+        }
+      ],
+      "price": 349.99,
+      "compareAtPrice": 399.99,
+      "costPrice": 175.0,
+      "image": "https://stfurnituredev.blob.core.windows.net/product-images/chair-001-wht-m.jpg",
+      "inventory": {
+        "quantity": 18,
+        "tracked": true,
+        "allowBackorder": true
+      },
+      "isActive": true
+    }
+  ],
+  "images": [
+    {
+      "url": "https://stfurnituredev.blob.core.windows.net/product-images/chair-001-main.jpg",
+      "altText": "Ergonomic Office Chair",
+      "isPrimary": true,
+      "sortOrder": 1
+    }
+  ],
+  "tags": ["chair", "office", "ergonomic", "adjustable", "mesh"],
+  "dimensions": {
+    "length": 26,
+    "width": 26,
+    "height": 48,
+    "unit": "inches"
+  },
+  "weight": {
+    "value": 45,
+    "unit": "lbs"
+  },
+  "seo": {
+    "title": "Ergonomic Office Chair | Adjustable Lumbar Support",
+    "description": "Premium ergonomic office chair with mesh back. Multiple colors and sizes available.",
+    "handle": "ergonomic-office-chair"
+  },
+  "isActive": true,
+  "isDeleted": false,
+  "isFeatured": false,
+  "requiresShipping": true,
+  "taxable": true,
+  "createdAt": "2024-01-16T09:15:00Z",
+  "updatedAt": "2024-01-16T09:15:00Z",
+  "createdBy": "admin@furniture.com",
+  "updatedBy": "admin@furniture.com"
+}

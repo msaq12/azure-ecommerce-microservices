@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "storageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the existing storage account"
+      }
+    }
+  },
+  "variables": {
+    "containers": [
+      {
+        "name": "product-images",
+        "publicAccess": "Blob"
+      },
+      {
+        "name": "product-videos",
+        "publicAccess": "Blob"
+      },
+      {
+        "name": "documents",
+        "publicAccess": "None"
+      },
+      {
+        "name": "uploads",
+        "publicAccess": "None"
+      },
+      {
+        "name": "exports",
+        "publicAccess": "None"
+      },
+      {
+        "name": "backups",
+        "publicAccess": "None"
+      }
+    ]
+  },
+  "resources": [
+    {
+      "copy": {
+        "name": "containerCopy",
+        "count": "[length(variables('containers'))]"
+      },
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2023-01-01",
+      "name": "[concat(parameters('storageAccountName'), '/default/', variables('containers')[copyIndex()].name)]",
+      "properties": {
+        "publicAccess": "[variables('containers')[copyIndex()].publicAccess]"
+      }
+    }
+  ],
+  "outputs": {
+    "containerNames": {
+      "type": "array",
+      "value": "[variables('containers')]"
+    }
+  }
+}

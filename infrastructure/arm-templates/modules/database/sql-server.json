@@ -1,0 +1,121 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "description": "Azure SQL Server for Furniture Dropshipping Platform"
+  },
+  "parameters": {
+    "sqlServerName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the SQL Server (must be globally unique)"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Azure region for SQL Server"
+      }
+    },
+    "administratorLogin": {
+      "type": "string",
+      "metadata": {
+        "description": "SQL Server administrator login name"
+      }
+    },
+    "administratorLoginPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "SQL Server administrator password"
+      }
+    },
+    "environment": {
+      "type": "string",
+      "defaultValue": "dev",
+      "allowedValues": ["dev", "staging", "prod"]
+    },
+    "allowAzureServices": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Allow Azure services to access SQL Server"
+      }
+    },
+    "allowedIpAddresses": {
+      "type": "array",
+      "defaultValue": [],
+      "metadata": {
+        "description": "Array of IP addresses allowed to access SQL Server"
+      }
+    }
+  },
+  "variables": {
+    "uniqueSuffix": "[uniqueString(resourceGroup().id, parameters('sqlServerName'))]",
+    "sqlServerFullName": "[concat(parameters('sqlServerName'), '-', variables('uniqueSuffix'))]",
+    "tags": {
+      "Environment": "[parameters('environment')]",
+      "Project": "FurnitureDropship",
+      "ManagedBy": "ARM-Template"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2023-05-01-preview",
+      "name": "[variables('sqlServerFullName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('tags')]",
+      "properties": {
+        "administratorLogin": "[parameters('administratorLogin')]",
+        "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+        "version": "12.0",
+        "minimalTlsVersion": "1.2",
+        "publicNetworkAccess": "Enabled"
+      }
+    },
+    {
+      "condition": "[parameters('allowAzureServices')]",
+      "type": "Microsoft.Sql/servers/firewallRules",
+      "apiVersion": "2023-05-01-preview",
+      "name": "[concat(variables('sqlServerFullName'), '/AllowAllAzureServices')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerFullName'))]"
+      ],
+      "properties": {
+        "startIpAddress": "0.0.0.0",
+        "endIpAddress": "0.0.0.0"
+      }
+    },
+    {
+      "copy": {
+        "name": "firewallRulesCopy",
+        "count": "[length(parameters('allowedIpAddresses'))]"
+      },
+      "type": "Microsoft.Sql/servers/firewallRules",
+      "apiVersion": "2023-05-01-preview",
+      "name": "[concat(variables('sqlServerFullName'), '/AllowedIP-', copyIndex())]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerFullName'))]"
+      ],
+      "properties": {
+        "startIpAddress": "[parameters('allowedIpAddresses')[copyIndex()]]",
+        "endIpAddress": "[parameters('allowedIpAddresses')[copyIndex()]]"
+      }
+    }
+  ],
+  "outputs": {
+    "sqlServerName": {
+      "type": "string",
+      "value": "[variables('sqlServerFullName')]"
+    },
+    "sqlServerId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Sql/servers', variables('sqlServerFullName'))]"
+    },
+    "sqlServerFqdn": {
+      "type": "string",
+      "value": "[reference(variables('sqlServerFullName')).fullyQualifiedDomainName]"
+    }
+  }
+}

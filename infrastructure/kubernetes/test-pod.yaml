@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-acr
+  namespace: furniture-dev
+spec:
+  containers:
+    - name: test
+      image: dockerregistrydevenv.azurecr.io/order-service:v1.0
+      command: ["sleep", "3600"]

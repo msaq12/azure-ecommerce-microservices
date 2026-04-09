@@ -1,0 +1,224 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "description": "Azure Function App for order processing - Furniture Dropshipping Platform"
+  },
+  "parameters": {
+    "functionAppName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Function App"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources"
+      }
+    },
+    "storageConnectionString": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Storage account connection string"
+      }
+    },
+    "environment": {
+      "type": "string",
+      "defaultValue": "dev",
+      "allowedValues": [
+        "dev",
+        "staging",
+        "prod"
+      ],
+      "metadata": {
+        "description": "Environment name"
+      }
+    },
+    "runtime": {
+      "type": "string",
+      "defaultValue": "dotnet-isolated",
+      "allowedValues": [
+        "dotnet-isolated",
+        "node",
+        "python",
+        "java"
+      ],
+      "metadata": {
+        "description": "Function runtime"
+      }
+    },
+    "runtimeVersion": {
+      "type": "string",
+      "defaultValue": "8",
+      "metadata": {
+        "description": "Runtime version (e.g., 8 for .NET 8)"
+      }
+    },
+    "serviceBusConnectionString": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Service Bus connection string"
+      }
+    },
+    "orderServiceUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Order Service API URL"
+      }
+    },
+    "tags": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "Tags to apply to resources"
+      }
+    }
+  },
+  "variables": {
+    "uniqueSuffix": "[uniqueString(resourceGroup().id, parameters('functionAppName'))]",
+    "functionAppFullName": "[concat(parameters('functionAppName'), '-', variables('uniqueSuffix'))]",
+    "hostingPlanName": "[concat('plan-', parameters('functionAppName'), '-', variables('uniqueSuffix'))]",
+    "applicationInsightsName": "[concat('appi-', parameters('functionAppName'), '-', variables('uniqueSuffix'))]",
+    "defaultTags": {
+      "Environment": "[parameters('environment')]",
+      "Project": "FurnitureDropship",
+      "ManagedBy": "ARM-Template",
+      "Service": "Functions"
+    },
+    "combinedTags": "[union(variables('defaultTags'), parameters('tags'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2020-02-02",
+      "name": "[variables('applicationInsightsName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('combinedTags')]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web",
+        "Request_Source": "rest"
+      }
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2023-01-01",
+      "name": "[variables('hostingPlanName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('combinedTags')]",
+      "sku": {
+        "name": "Y1",
+        "tier": "Dynamic",
+        "size": "Y1",
+        "family": "Y"
+      },
+      "properties": {
+        "reserved": true
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2023-01-01",
+      "name": "[variables('functionAppFullName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('combinedTags')]",
+      "kind": "functionapp,linux",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+        "[resourceId('Microsoft.Insights/components', variables('applicationInsightsName'))]"
+      ],
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+        "httpsOnly": true,
+        "siteConfig": {
+          "linuxFxVersion": "[concat(toUpper(parameters('runtime')), '|', parameters('runtimeVersion'))]",
+          "appSettings": [
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[parameters('storageConnectionString')]"
+            },
+            {
+              "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+              "value": "[parameters('storageConnectionString')]"
+            },
+            {
+              "name": "WEBSITE_CONTENTSHARE",
+              "value": "[toLower(variables('functionAppFullName'))]"
+            },
+            {
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "~4"
+            },
+            {
+              "name": "FUNCTIONS_WORKER_RUNTIME",
+              "value": "[parameters('runtime')]"
+            },
+            {
+              "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+              "value": "[reference(resourceId('Microsoft.Insights/components', variables('applicationInsightsName')), '2020-02-02').ConnectionString]"
+            },
+            {
+              "name": "ServiceBusConnectionString",
+              "value": "[parameters('serviceBusConnectionString')]"
+            },
+            {
+              "name": "OrderServiceUrl",
+              "value": "[parameters('orderServiceUrl')]"
+            }
+          ],
+          "ftpsState": "Disabled",
+          "minTlsVersion": "1.2"
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "functionAppName": {
+      "type": "string",
+      "value": "[variables('functionAppFullName')]",
+      "metadata": {
+        "description": "Name of the Function App"
+      }
+    },
+    "functionAppId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Web/sites', variables('functionAppFullName'))]",
+      "metadata": {
+        "description": "Resource ID of the Function App"
+      }
+    },
+    "functionAppUrl": {
+      "type": "string",
+      "value": "[concat('https://', reference(resourceId('Microsoft.Web/sites', variables('functionAppFullName'))).defaultHostName)]",
+      "metadata": {
+        "description": "Function App URL"
+      }
+    },
+    "managedIdentityPrincipalId": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Web/sites', variables('functionAppFullName')), '2023-01-01', 'Full').identity.principalId]",
+      "metadata": {
+        "description": "Principal ID of the Managed Identity"
+      }
+    },
+    "managedIdentityTenantId": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Web/sites', variables('functionAppFullName')), '2023-01-01', 'Full').identity.tenantId]",
+      "metadata": {
+        "description": "Tenant ID of the Managed Identity"
+      }
+    },
+    "applicationInsightsName": {
+      "type": "string",
+      "value": "[variables('applicationInsightsName')]",
+      "metadata": {
+        "description": "Name of Application Insights"
+      }
+    }
+  }
+}

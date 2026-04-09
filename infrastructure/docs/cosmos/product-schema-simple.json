@@ -1,0 +1,61 @@
+{
+  "id": "prod-001",
+  "name": "Modern Leather Sofa",
+  "description": "Luxurious 3-seater sofa with genuine leather upholstery. Perfect for contemporary living rooms.",
+  "categoryId": "sofas",
+  "categoryName": "Sofas",
+  "sku": "SOFA-MOD-001",
+  "barcode": "1234567890123",
+  "vendor": "Luxury Furniture Co",
+  "supplier": "Euro Imports Ltd",
+  "price": 1299.99,
+  "compareAtPrice": 1599.99,
+  "costPrice": 650.0,
+  "currency": "USD",
+  "images": [
+    {
+      "url": "https://stfurnituredev.blob.core.windows.net/product-images/sofa-001-main.jpg",
+      "altText": "Modern Leather Sofa - Front View",
+      "isPrimary": true,
+      "sortOrder": 1
+    },
+    {
+      "url": "https://stfurnituredev.blob.core.windows.net/product-images/sofa-001-side.jpg",
+      "altText": "Modern Leather Sofa - Side View",
+      "isPrimary": false,
+      "sortOrder": 2
+    }
+  ],
+  "tags": ["sofa", "leather", "modern", "3-seater", "living-room"],
+  "inventory": {
+    "quantity": 15,
+    "tracked": true,
+    "allowBackorder": false,
+    "lowStockThreshold": 3,
+    "warehouse": "Warehouse-East-01"
+  },
+  "dimensions": {
+    "length": 84,
+    "width": 36,
+    "height": 33,
+    "unit": "inches"
+  },
+  "weight": {
+    "value": 120,
+    "unit": "lbs"
+  },
+  "seo": {
+    "title": "Modern Leather Sofa - 3 Seater | Luxury Furniture",
+    "description": "Shop our luxurious modern leather sofa. Perfect for contemporary living spaces. Free shipping available.",
+    "handle": "modern-leather-sofa-3-seater"
+  },
+  "isActive": true,
+  "isDeleted": false,
+  "isFeatured": true,
+  "requiresShipping": true,
+  "taxable": true,
+  "createdAt": "2024-01-15T10:30:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z",
+  "createdBy": "admin@furniture.com",
+  "updatedBy": "admin@furniture.com"
+}

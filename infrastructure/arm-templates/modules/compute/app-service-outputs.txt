@@ -1,0 +1,6 @@
+App Service Deployment Outputs
+Generated: 01/12/2026 11:06:05
+
+App Service Name: app-product-service-dev-9191
+App Service URL: https://app-product-service-dev-9191.azurewebsites.net
+Managed Identity Principal ID: 398fb221-69e2-432b-991c-c4b13abc764d

@@ -1,0 +1,17 @@
+<policies>
+    <inbound>
+        <base />
+        <!-- Stricter rate limit for orders: 20 calls per minute -->
+        <rate-limit-by-key calls="20" renewal-period="60" counter-key="@(context.Subscription?.Key ?? "anonymous")" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+        <!-- Don't cache order responses (sensitive data) -->
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

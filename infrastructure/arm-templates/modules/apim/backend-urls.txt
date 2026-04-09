@@ -1,0 +1,7 @@
+Product Service:
+- Base URL: https://app-product-service-dev-9191.azurewebsites.net
+- Swagger: https://app-product-service-dev-9191.azurewebsites.net/swagger/v1/swagger.json
+
+Order Service:
+- Base URL: http://135.237.18.70
+- Swagger: http://135.237.18.70/swagger/v1/swagger.json
