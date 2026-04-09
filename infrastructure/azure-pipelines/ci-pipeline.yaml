@@ -9,7 +9,7 @@ pool:
 variables:
   - group: GitHub-Sync-Secrets
   - name: GITHUB_REPO
-    value: "msaq12/distributed-ecommerce-platform"
+    value: "msaq12/azure-ecommerce-microservices"
   - name: SERVICE_FOLDER
     value: "infrastructure"
 
@@ -38,7 +38,7 @@ stages:
                         --exclude='.gitignore' \
                         --exclude='kubernetes/order-service-secret.yaml' \
                         $(Build.SourcesDirectory)/ $(SERVICE_FOLDER)/
-                        
+
               git add .
               git diff --cached --quiet || (git commit -m "Sync $(SERVICE_FOLDER) from Azure DevOps - Build $(Build.BuildNumber)" && git push)
             displayName: "Sync to GitHub combined repo"
