@@ -1,0 +1,60 @@
+flowchart TB
+    subgraph Frontend["Frontend Layer"]
+        WEB["E-commerce Site\nNext.js → App Service"]
+        ADMIN["Admin Portal\nReact → App Service"]
+    end
+
+    subgraph Gateway["API Gateway"]
+        APIM["Azure API Management\nhttps://apim-furniture-dev.azure-api.net\nRate limit · JWT · Cache · CORS"]
+    end
+
+    subgraph Auth["Identity"]
+        EXTID["External ID\n(customers)"]
+        AAD["Azure AD\n(employees)"]
+    end
+
+    subgraph Services["Microservices"]
+        PROD["Product Service\nASP.NET Core\nApp Service"]
+        ORD["Order Service\nASP.NET Core\nAKS (2 replicas)"]
+        FUNC["Azure Functions\nInvoice · Blob · Timer"]
+    end
+
+    subgraph Data["Data Layer"]
+        COSMOS[("Cosmos DB\nProducts")]
+        SQL[("Azure SQL\nOrders")]
+        REDIS[("Redis Cache")]
+        BLOB["Blob Storage\nImages"]
+    end
+
+    subgraph Messaging["Async Messaging"]
+        SB["Service Bus\norder-processing"]
+        EG["Event Grid\nproduct-events"]
+    end
+
+    subgraph Security["Security"]
+        KV["Key Vault\n(all secrets)"]
+        MI["Managed Identity\n(all services)"]
+    end
+
+    subgraph Observability["Observability"]
+        AI["Application Insights\nDistributed Tracing"]
+        LA["Log Analytics"]
+    end
+
+    WEB --> APIM
+    ADMIN --> APIM
+    WEB <-.-> EXTID
+    ADMIN <-.-> AAD
+    APIM --> PROD
+    APIM --> ORD
+    PROD --> COSMOS
+    PROD --> REDIS
+    ORD --> SQL
+    ORD --> SB
+    SB --> FUNC
+    EG --> FUNC
+    FUNC --> BLOB
+    PROD & ORD & FUNC --> KV
+    MI --> KV
+    PROD & ORD & APIM & FUNC --> AI
+    AI --> LA

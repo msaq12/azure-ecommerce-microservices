@@ -1,0 +1,161 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "description": "Azure Service Bus namespace and queue for furniture dropshipping platform"
+  },
+  "parameters": {
+    "serviceBusNamespaceName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Service Bus namespace"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources"
+      }
+    },
+    "environment": {
+      "type": "string",
+      "defaultValue": "dev",
+      "allowedValues": [
+        "dev",
+        "staging",
+        "prod"
+      ],
+      "metadata": {
+        "description": "Environment name"
+      }
+    },
+    "skuName": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ],
+      "metadata": {
+        "description": "Service Bus SKU (Standard required for topics)"
+      }
+    },
+    "queueName": {
+      "type": "string",
+      "defaultValue": "order-processing",
+      "metadata": {
+        "description": "Name of the queue"
+      }
+    },
+    "maxDeliveryCount": {
+      "type": "int",
+      "defaultValue": 10,
+      "metadata": {
+        "description": "Maximum number of delivery attempts before message goes to dead-letter queue"
+      }
+    },
+    "lockDuration": {
+      "type": "string",
+      "defaultValue": "PT5M",
+      "metadata": {
+        "description": "Lock duration (ISO 8601 format). Default: 5 minutes"
+      }
+    },
+    "defaultMessageTimeToLive": {
+      "type": "string",
+      "defaultValue": "P14D",
+      "metadata": {
+        "description": "Default message TTL. Default: 14 days"
+      }
+    },
+    "tags": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "Tags to apply to resources"
+      }
+    }
+  },
+  "variables": {
+    "uniqueSuffix": "[uniqueString(resourceGroup().id, parameters('serviceBusNamespaceName'))]",
+    "serviceBusFullName": "[concat(parameters('serviceBusNamespaceName'), '-', variables('uniqueSuffix'))]",
+    "defaultTags": {
+      "Environment": "[parameters('environment')]",
+      "Project": "FurnitureDropship",
+      "ManagedBy": "ARM-Template",
+      "Service": "Messaging"
+    },
+    "combinedTags": "[union(variables('defaultTags'), parameters('tags'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ServiceBus/namespaces",
+      "apiVersion": "2022-10-01-preview",
+      "name": "[variables('serviceBusFullName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('combinedTags')]",
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "tier": "[parameters('skuName')]"
+      },
+      "properties": {
+        "minimumTlsVersion": "1.2",
+        "publicNetworkAccess": "Enabled",
+        "disableLocalAuth": false,
+        "zoneRedundant": false
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/queues",
+      "apiVersion": "2022-10-01-preview",
+      "name": "[concat(variables('serviceBusFullName'), '/', parameters('queueName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusFullName'))]"
+      ],
+      "properties": {
+        "lockDuration": "[parameters('lockDuration')]",
+        "maxSizeInMegabytes": 1024,
+        "requiresDuplicateDetection": false,
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "[parameters('defaultMessageTimeToLive')]",
+        "deadLetteringOnMessageExpiration": true,
+        "maxDeliveryCount": "[parameters('maxDeliveryCount')]",
+        "enableBatchedOperations": true,
+        "enablePartitioning": false,
+        "enableExpress": false
+      }
+    }
+  ],
+  "outputs": {
+    "serviceBusNamespaceName": {
+      "type": "string",
+      "value": "[variables('serviceBusFullName')]",
+      "metadata": {
+        "description": "Name of the Service Bus namespace"
+      }
+    },
+    "serviceBusEndpoint": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusFullName'))).serviceBusEndpoint]",
+      "metadata": {
+        "description": "Service Bus endpoint"
+      }
+    },
+    "queueName": {
+      "type": "string",
+      "value": "[parameters('queueName')]",
+      "metadata": {
+        "description": "Name of the queue"
+      }
+    },
+    "primaryConnectionString": {
+      "type": "string",
+      "value": "[listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', variables('serviceBusFullName'), 'RootManageSharedAccessKey'), '2022-10-01-preview').primaryConnectionString]",
+      "metadata": {
+        "description": "Primary connection string"
+      }
+    }
+  }
+}

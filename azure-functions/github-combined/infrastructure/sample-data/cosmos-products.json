@@ -1,0 +1,210 @@
+[
+  {
+    "id": "prod-chair-003",
+    "name": "Gaming Chair with RGB Lighting",
+    "description": "High-back gaming chair with lumbar support and RGB",
+    "categoryId": "chairs",
+    "categoryName": "Chairs",
+    "sku": "CHAIR-GAM-003",
+    "price": 449.99,
+    "compareAtPrice": 599.99,
+    "tags": ["chair", "gaming", "RGB", "ergonomic"],
+    "images": [
+      {
+        "url": "https://via.placeholder.com/800x600?text=Gaming+Chair",
+        "altText": "Gaming Chair with RGB",
+        "isPrimary": true
+      }
+    ],
+    "inventory": {
+      "quantity": 28,
+      "tracked": true
+    },
+    "isActive": true,
+    "isDeleted": false,
+    "createdAt": "2024-01-15T13:00:00Z",
+    "updatedAt": "2024-01-15T13:00:00Z"
+  },
+  {
+    "id": "prod-chair-004",
+    "name": "Velvet Accent Chair",
+    "description": "Stylish accent chair with gold metal legs",
+    "categoryId": "chairs",
+    "categoryName": "Chairs",
+    "sku": "CHAIR-ACC-004",
+    "price": 329.99,
+    "compareAtPrice": 429.99,
+    "tags": ["chair", "accent", "velvet", "modern"],
+    "images": [
+      {
+        "url": "https://via.placeholder.com/800x600?text=Accent+Chair",
+        "altText": "Velvet Accent Chair",
+        "isPrimary": true
+      }
+    ],
+    "inventory": {
+      "quantity": 15,
+      "tracked": true
+    },
+    "isActive": true,
+    "isDeleted": false,
+    "createdAt": "2024-01-15T13:15:00Z",
+    "updatedAt": "2024-01-15T13:15:00Z"
+  },
+  {
+    "id": "prod-table-003",
+    "name": "L-Shaped Computer Desk",
+    "description": "Spacious L-shaped desk for home office",
+    "categoryId": "tables",
+    "categoryName": "Tables",
+    "sku": "TABLE-DSK-003",
+    "price": 399.99,
+    "compareAtPrice": 549.99,
+    "tags": ["table", "desk", "office", "L-shaped"],
+    "images": [
+      {
+        "url": "https://via.placeholder.com/800x600?text=Computer+Desk",
+        "altText": "L-Shaped Computer Desk",
+        "isPrimary": true
+      }
+    ],
+    "inventory": {
+      "quantity": 18,
+      "tracked": true
+    },
+    "isActive": true,
+    "isDeleted": false,
+    "createdAt": "2024-01-15T13:30:00Z",
+    "updatedAt": "2024-01-15T13:30:00Z"
+  },
+  {
+    "id": "prod-table-004",
+    "name": "Marble Top Side Table",
+    "description": "Elegant side table with marble top and brass base",
+    "categoryId": "tables",
+    "categoryName": "Tables",
+    "sku": "TABLE-SID-004",
+    "price": 199.99,
+    "compareAtPrice": 279.99,
+    "tags": ["table", "side-table", "marble", "elegant"],
+    "images": [
+      {
+        "url": "https://via.placeholder.com/800x600?text=Side+Table",
+        "altText": "Marble Top Side Table",
+        "isPrimary": true
+      }
+    ],
+    "inventory": {
+      "quantity": 32,
+      "tracked": true
+    },
+    "isActive": true,
+    "isDeleted": false,
+    "createdAt": "2024-01-15T13:45:00Z",
+    "updatedAt": "2024-01-15T13:45:00Z"
+  },
+  {
+    "id": "prod-bed-002",
+    "name": "Queen Platform Bed with Storage",
+    "description": "Modern platform bed with built-in storage drawers",
+    "categoryId": "beds",
+    "categoryName": "Beds",
+    "sku": "BED-QUEEN-002",
+    "price": 1199.99,
+    "compareAtPrice": 1599.99,
+    "tags": ["bed", "queen", "platform", "storage"],
+    "images": [
+      {
+        "url": "https://via.placeholder.com/800x600?text=Queen+Bed",
+        "altText": "Queen Platform Bed",
+        "isPrimary": true
+      }
+    ],
+    "inventory": {
+      "quantity": 10,
+      "tracked": true
+    },
+    "isActive": true,
+    "isDeleted": false,
+    "createdAt": "2024-01-15T14:00:00Z",
+    "updatedAt": "2024-01-15T14:00:00Z"
+  },
+  {
+    "id": "prod-storage-003",
+    "name": "5-Drawer Storage Unit",
+    "description": "Tall storage unit with 5 spacious drawers",
+    "categoryId": "storage",
+    "categoryName": "Storage",
+    "sku": "STOR-DRW-003",
+    "price": 349.99,
+    "compareAtPrice": 449.99,
+    "tags": ["storage", "drawer", "tall", "organizer"],
+    "images": [
+      {
+        "url": "https://via.placeholder.com/800x600?text=Drawer+Unit",
+        "altText": "5-Drawer Storage Unit",
+        "isPrimary": true
+      }
+    ],
+    "inventory": {
+      "quantity": 20,
+      "tracked": true
+    },
+    "isActive": true,
+    "isDeleted": false,
+    "createdAt": "2024-01-15T14:15:00Z",
+    "updatedAt": "2024-01-15T14:15:00Z"
+  },
+  {
+    "id": "prod-storage-004",
+    "name": "Modular Closet Organizer System",
+    "description": "Customizable closet organization system",
+    "categoryId": "storage",
+    "categoryName": "Storage",
+    "sku": "STOR-CLO-004",
+    "price": 499.99,
+    "compareAtPrice": 699.99,
+    "tags": ["storage", "closet", "organizer", "modular"],
+    "images": [
+      {
+        "url": "https://via.placeholder.com/800x600?text=Closet+Organizer",
+        "altText": "Closet Organizer System",
+        "isPrimary": true
+      }
+    ],
+    "inventory": {
+      "quantity": 12,
+      "tracked": true
+    },
+    "isActive": true,
+    "isDeleted": false,
+    "createdAt": "2024-01-15T14:30:00Z",
+    "updatedAt": "2024-01-15T14:30:00Z"
+  },
+  {
+    "id": "prod-lighting-003",
+    "name": "Smart Ceiling Fan with LED Light",
+    "description": "WiFi-enabled ceiling fan with dimmable LED light",
+    "categoryId": "lighting",
+    "categoryName": "Lighting",
+    "sku": "LIGHT-FAN-003",
+    "price": 279.99,
+    "compareAtPrice": 379.99,
+    "tags": ["lighting", "ceiling-fan", "smart", "LED"],
+    "images": [
+      {
+        "url": "https://via.placeholder.com/800x600?text=Ceiling+Fan",
+        "altText": "Smart Ceiling Fan",
+        "isPrimary": true
+      }
+    ],
+    "inventory": {
+      "quantity": 22,
+      "tracked": true
+    },
+    "isActive": true,
+    "isDeleted": false,
+    "createdAt": "2024-01-15T14:45:00Z",
+    "updatedAt": "2024-01-15T14:45:00Z"
+  }
+]

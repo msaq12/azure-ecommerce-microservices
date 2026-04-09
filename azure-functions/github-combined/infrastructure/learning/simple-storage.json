@@ -1,0 +1,55 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "storageAccountName": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 24,
+
+      "metadata": {
+        "description": "Storage account name (Length must be between 3 to 24 characters)"
+      }
+    }
+  },
+
+  "variables": {
+    "uniqueSuffix": "[uniqueString(resourceGroup().id)]",
+    "fullStorageName": "[concat(parameters('storageAccountName'),variables('uniqueSuffix'))]",
+    "location": "[resourceGroup().location]"
+  },
+
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2023-01-01",
+      "name": "[variables('fullStorageName')]",
+      "location": "[variables('location')]",
+      "tags": {
+        "Environment": "Learning",
+        "Purpose": "Day 2 Practice"
+      },
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "supportsHttpsTrafficOnly": true,
+        "minimumTlsVersion": "TLS1_2",
+        "allowBlobPublicAccess": true
+      }
+    }
+  ],
+
+  "outputs": {
+    "storageAccountName": {
+      "type": "string",
+      "value": "[variables('fullStorageName')]"
+    },
+    "storageAccountId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Storage/storageAccounts',variables('fullStorageName'))]"
+    }
+  }
+}

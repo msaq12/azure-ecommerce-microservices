@@ -1,0 +1,158 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "description": "Azure Redis Cache for furniture dropshipping platform"
+  },
+  "parameters": {
+    "redisCacheName": {
+      "type": "string",
+      "defaultValue": "[concat('redis-furniture-', uniqueString(resourceGroup().id))]",
+      "metadata": {
+        "description": "Name of the Redis Cache (globally unique)"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Azure region for Redis Cache"
+      }
+    },
+    "environment": {
+      "type": "string",
+      "defaultValue": "dev",
+      "allowedValues": [
+        "dev",
+        "staging",
+        "prod"
+      ],
+      "metadata": {
+        "description": "Environment name"
+      }
+    },
+    "redisSku": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ],
+      "metadata": {
+        "description": "Redis Cache SKU (Basic = no replication)"
+      }
+    },
+    "redisFamily": {
+      "type": "string",
+      "defaultValue": "C",
+      "allowedValues": [
+        "C",
+        "P"
+      ],
+      "metadata": {
+        "description": "Redis family (C = Basic/Standard, P = Premium)"
+      }
+    },
+    "redisCapacity": {
+      "type": "int",
+      "defaultValue": 0,
+      "allowedValues": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "metadata": {
+        "description": "Redis capacity (0 = 250MB, 1 = 1GB, 2 = 2.5GB, etc.)"
+      }
+    },
+    "enableNonSslPort": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Enable non-SSL port 6379 (for testing only)"
+      }
+    },
+    "tags": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "Tags to apply to Redis Cache"
+      }
+    }
+  },
+  "variables": {
+    "redisCacheFullName": "[parameters('redisCacheName')]",
+    "defaultTags": {
+      "Environment": "[parameters('environment')]",
+      "Project": "FurnitureDropship",
+      "ManagedBy": "ARM-Template",
+      "Service": "Cache"
+    },
+    "combinedTags": "[union(variables('defaultTags'), parameters('tags'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Cache/redis",
+      "apiVersion": "2023-08-01",
+      "name": "[variables('redisCacheFullName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('combinedTags')]",
+      "properties": {
+        "sku": {
+          "name": "[parameters('redisSku')]",
+          "family": "[parameters('redisFamily')]",
+          "capacity": "[parameters('redisCapacity')]"
+        },
+        "enableNonSslPort": "[parameters('enableNonSslPort')]",
+        "minimumTlsVersion": "1.2",
+        "publicNetworkAccess": "Enabled",
+        "redisConfiguration": {
+          "maxmemory-policy": "allkeys-lru"
+        },
+        "redisVersion": "6"
+      }
+    }
+  ],
+  "outputs": {
+    "redisCacheName": {
+      "type": "string",
+      "value": "[variables('redisCacheFullName')]",
+      "metadata": {
+        "description": "Name of the Redis Cache"
+      }
+    },
+    "redisHostName": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Cache/redis', variables('redisCacheFullName'))).hostName]",
+      "metadata": {
+        "description": "Redis hostname"
+      }
+    },
+    "redisSslPort": {
+      "type": "int",
+      "value": "[reference(resourceId('Microsoft.Cache/redis', variables('redisCacheFullName'))).sslPort]",
+      "metadata": {
+        "description": "Redis SSL port (6380)"
+      }
+    },
+    "redisPort": {
+      "type": "int",
+      "value": "[reference(resourceId('Microsoft.Cache/redis', variables('redisCacheFullName'))).port]",
+      "metadata": {
+        "description": "Redis non-SSL port (6379)"
+      }
+    },
+    "redisPrimaryKey": {
+      "type": "string",
+      "value": "[listKeys(resourceId('Microsoft.Cache/redis', variables('redisCacheFullName')), '2023-08-01').primaryKey]",
+      "metadata": {
+        "description": "Primary access key"
+      }
+    }
+  }
+}

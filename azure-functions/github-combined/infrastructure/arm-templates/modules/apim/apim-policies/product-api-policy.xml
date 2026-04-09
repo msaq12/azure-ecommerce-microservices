@@ -1,0 +1,18 @@
+<policies>
+    <inbound>
+        <base />
+        <!-- Check cache before forwarding -->
+        <cache-lookup vary-by-developer="false" vary-by-developer-groups="false" downstream-caching-type="none" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+        <!-- Cache product responses for 10 minutes -->
+        <cache-store duration="600" />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

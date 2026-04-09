@@ -1,0 +1,73 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "description": "Event Grid Topic for product catalog events"
+  },
+  "parameters": {
+    "topicName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Event Grid Topic"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for Event Grid Topic"
+      }
+    },
+    "environment": {
+      "type": "string",
+      "defaultValue": "dev",
+      "allowedValues": ["dev", "staging", "prod"]
+    },
+    "tags": {
+      "type": "object",
+      "defaultValue": {}
+    }
+  },
+  "variables": {
+    "uniqueSuffix": "[uniqueString(resourceGroup().id, parameters('topicName'))]",
+    "topicFullName": "[concat(parameters('topicName'), '-', variables('uniqueSuffix'))]",
+    "defaultTags": {
+      "Environment": "[parameters('environment')]",
+      "Project": "FurnitureDropship",
+      "ManagedBy": "ARM-Template",
+      "Service": "Messaging"
+    },
+    "combinedTags": "[union(variables('defaultTags'), parameters('tags'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.EventGrid/topics",
+      "apiVersion": "2023-12-15-preview",
+      "name": "[variables('topicFullName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('combinedTags')]",
+      "properties": {
+        "inputSchema": "EventGridSchema",
+        "publicNetworkAccess": "Enabled"
+      }
+    }
+  ],
+  "outputs": {
+    "topicName": {
+      "type": "string",
+      "value": "[variables('topicFullName')]"
+    },
+    "topicEndpoint": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.EventGrid/topics', variables('topicFullName'))).endpoint]"
+    },
+    "topicId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.EventGrid/topics', variables('topicFullName'))]"
+    },
+    "topicKey": {
+      "type": "string",
+      "value": "[listKeys(resourceId('Microsoft.EventGrid/topics', variables('topicFullName')), '2023-12-15-preview').key1]"
+    }
+  }
+}
